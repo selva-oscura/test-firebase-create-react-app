@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import firebaseConfig from './firebaseConfig.js';
 import * as firebase from 'firebase';
 
+
 // Initialize Firebase
-const fb = firebase  
+const fire = firebase
   .initializeApp(firebaseConfig)
   .database()
   .ref();
@@ -18,5 +19,14 @@ const App = (props) => {
 	   </div>
   );
 }
+
+fire.on('value', snapshot => { 
+  const store = snapshot.val();
+  ReactDOM.render(
+    <App {...store} />,
+    document.getElementById('root')
+  );
+});
+
 
 ReactDOM.render(<App />, document.getElementById('root'));
