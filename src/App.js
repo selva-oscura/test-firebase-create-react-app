@@ -7,6 +7,7 @@ class App extends Component {
 	constructor(){
 		super();
 		this.addATimestamp = this.addATimestamp.bind(this);
+		this.updateATimestamp = this.updateATimestamp.bind(this)
 		this.state = {
 			timestamps: {
 				123456789:{
@@ -44,6 +45,11 @@ class App extends Component {
 		}
 		firebase.database().ref('timestamps/'+newData.id).set(newData, response => response);
 	}
+	updateATimestamp(e){
+		console.log('clicked', e.target.id, this);
+		let timestamp = Date.now();
+		firebase.database().ref('timestamps/'+e.target.id).update({when:timestamp})
+	}
 	render(){
 		console.log('this.state.timestamps', this.state.timestamps)
 		return(
@@ -55,15 +61,22 @@ class App extends Component {
 		    	TimeStampMe
 		    </button>
 				<p>{JSON.stringify(this.state.timestamps)}</p>
-				{Object.keys(this.state.timestamps).map((timestamp, i) => <Timestamp key={i} id={i} timestamp={this.state.timestamps[timestamp]} />)}
+				{Object.keys(this.state.timestamps).map((timestamp, i) => <Timestamp key={i} id={i} timestamp={this.state.timestamps[timestamp]} updateATimestamp={this.updateATimestamp} />)}
 			</div>
 		)
 	}
 }
 
-const Timestamp = ({timestamp}) => (
+const Timestamp = ({timestamp, updateATimestamp}) => (
 	<h2>
 		{timestamp.what}, {timestamp.when}
+		<button
+			className="update-button"
+			onClick={updateATimestamp}
+			id={timestamp.id}
+		>
+			updateMe
+		</button>
 	</h2>
 );
 
